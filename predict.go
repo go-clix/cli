@@ -11,9 +11,6 @@ import (
 // predict attempts to send <TAB> suggestions to bash.
 // Returns false if not running in a completion context
 func predict(c *Command) bool {
-	if c.Args == nil {
-		c.Args = ArgsAny()
-	}
 
 	cmp := complete.New(c.Name(), createCmp(c))
 	return cmp.Complete()
@@ -52,11 +49,11 @@ func createCmp(c *Command) complete.Command {
 		}
 	}
 
-	// Positional Arguments
-	rootCmp.Args = c.Args
-	if rootCmp.Args == nil {
-		rootCmp.Args = PredictAny()
+	// Positional Arguments, default to ArgsAny for all leaf commands
+	if c.Args == nil && len(c.children) == 0 {
+		c.Args = ArgsAny()
 	}
+	rootCmp.Args = c.Args
 
 	return rootCmp
 }
