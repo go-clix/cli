@@ -58,7 +58,9 @@ func (c *Command) Execute() error {
 	}
 
 	// add subcommand for install CLI completions
-	c.AddCommand(completionCmd(c.Use))
+	if len(c.children) != 0 {
+		c.AddCommand(completionCmd(c.Use))
+	}
 
 	// exit if in bash completion context
 	if predict(c) {
