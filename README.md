@@ -3,9 +3,9 @@
 Cli-X is a command line library for Go, inspired by
 [`spf13/cobra`](https://github.com/spf13/cobra).
 
-- :package: **`struct` based API**: Similar to `cobra`, `clix` features a `struct` based
+- :package: **`struct` based API**: Similar to `cobra`, `go-clix/cli` features a `struct` based
   API for easy composition and discovery of available options.
-- :children_crossing: [**Subcommands**](#subcommands): `clix.Command` can be nested for a `git`
+- :children_crossing: [**Subcommands**](#subcommands): `cli.Command` can be nested for a `git`
   like experience.
 - :pushpin: [**Flags**](#flags): Every command has it's own set of flags. POSIX compliant
   using `spf13/pflag`.
@@ -34,12 +34,12 @@ import (
 
 func main() {
     // create the root command
-    rootCmd := clix.Command{
+    rootCmd := cli.Command{
         Use: "greet",
         Short: "print a message",
-        Run: func(cmd *clix.Command, args []string) error {
+        Run: func(cmd *cli.Command, args []string) error {
             fmt.Println("Hello from Cli-X!")
-        }
+        },
     }
 
     // run and check for errors
@@ -57,19 +57,21 @@ Every command may have children:
 ```go
 // use a func to return a Command instead of
 // a global variable and `init()`
-func applyCmd() *clix.Command {
-    cmd := &clix.Command{
+func applyCmd() *cli.Command {
+    cmd := &cli.Command{
         Use: "apply",
         Short: "apply the changes"
     }
 
-    cmd.Run = func(cmd *clix.Command, args []string) error {
+    cmd.Run = func(cmd *cli.Command, args []string) error {
         fmt.Println("applied", args[0])
     }
+    
+    return cmd
 }
 
 func main() {
-    rootCmd := &clix.Comand{
+    rootCmd := &cli.Comand{
         Use: "kubectl",
         Short: "Kubernetes management tool",
     }
@@ -95,20 +97,21 @@ func main() {
 A `pflag.FlagSet` can be accessed per command using `*Command.Flags()`:
 
 ```go
-func applyCmd() *clix.Command {
-    cmd := &clix.Command{
+func applyCmd() *cli.Command {
+    cmd := &cli.Command{
         Use: "apply",
         Short: "apply the changes"
     }
 
     force := cmd.Flags().BoolP("force", "f", false, "skip checks")
 
-    cmd.Run = func(cmd *clix.Command, args []string) error {
+    cmd.Run = func(cmd *cli.Command, args []string) error {
         fmt.Println("applied", args[0])
         if *force {
             fmt.Println("The force was with us.")
         }
     }
+    return cmd
 }
 ```
 
@@ -117,8 +120,8 @@ func applyCmd() *clix.Command {
 To make the `apply` subcommand also available as `make` and `do`:
 
 ```go
-func applyCmd() *clix.Command {
-    cmd := &clix.Command{
+func applyCmd() *cli.Command {
+    cmd := &cli.Command{
         Use: "apply",
         Aliases: []string{"make", "do"},
         Short: "apply the changes"
@@ -161,12 +164,12 @@ import (
     "github.com/go-clix/cli"
 )
 
-func logsCmd() *clix.Command {
-    cmd := &clix.Command{
+func logsCmd() *cli.Command {
+    cmd := &cli.Command{
         Use: "logs",
         Short: "show logs of a pod",
         Predictors: map[string]complete.Predictor{
-            "output": clix.PredictSet("lines", "json", "logfmt"),
+            "output": cli.PredictSet("lines", "json", "logfmt"),
         },
     }
 
@@ -200,12 +203,12 @@ import (
     "github.com/go-clix/cli"
 )
 
-func applyCmd() *clix.Command {
-    cmd := &clix.Command{
+func applyCmd() *cli.Command {
+    cmd := &cli.Command{
         Use: "logs",
         Short: "show logs of a pod",
         // we expect one argument which can be anything
-        Args: clix.ArgsExact(1),
+        Args: cli.ArgsExact(1),
     }
 }
 ```

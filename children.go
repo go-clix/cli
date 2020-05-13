@@ -4,8 +4,8 @@ import "fmt"
 
 // AddCommand adds the supplied commands as subcommands.
 // This command is set as the parent of the new children.
-func (c *Command) AddCommand(childs ...*Command) {
-	for _, child := range childs {
+func (c *Command) AddCommand(children ...*Command) {
+	for _, child := range children {
 		child.parentPtr = c
 		c.children = append(c.children, child)
 	}

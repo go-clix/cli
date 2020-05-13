@@ -1,9 +1,8 @@
 package cli
 
 import (
+	"reflect"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestStripFlags(t *testing.T) {
@@ -73,6 +72,8 @@ func TestStripFlags(t *testing.T) {
 
 	for _, test := range tests {
 		got := stripFlags(test.input, c)
-		assert.Equal(t, test.output, got)
+		if !reflect.DeepEqual(test.output, got) {
+			t.Fatalf("want %+v but got %+v", got, test.output)
+		}
 	}
 }
