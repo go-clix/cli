@@ -130,7 +130,10 @@ func helpErr(c *Command) error {
 		help = c.Long
 	}
 
-	return fmt.Errorf("%s\n\n%s", help, c.Usage())
+	return ErrHelp{
+		Message: help,
+		usage:   c.Usage(),
+	}
 }
 
 // Name of this command. The first segment of the `Use` field.

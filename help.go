@@ -16,19 +16,26 @@ func (c *Command) help(reason error) error {
 	}
 
 	return ErrHelp{
-		Reason: reason,
-		usage:  c.Usage(),
+		Message: reason.Error(),
+		usage:   c.Usage(),
+		error:   true,
 	}
 }
 
 // ErrHelp wraps an actual error, showing the usage of the command afterwards
 type ErrHelp struct {
-	Reason error
-	usage  string
+	Message string
+	usage   string
+	error   bool
 }
 
 func (e ErrHelp) Error() string {
-	return fmt.Sprintf("Error: %s\n\n%s", e.Reason.Error(), e.usage)
+	pat := "%s\n\n%s"
+	if e.error {
+		pat = "Error: " + pat
+	}
+
+	return fmt.Sprintf(pat, e.Message, e.usage)
 }
 
 // helpable is a internal wrapper type of Command that defines functions
