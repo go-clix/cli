@@ -84,6 +84,27 @@ func ValidateExact(n int) ValidateFunc {
 	}
 }
 
+// Argument range
+
+// ArgsRange checks for between n and m arguments (inclusive), predicting anything
+func ArgsRange(n, m int) Arguments {
+	return Args{
+		Validator: ValidateRange(n, m),
+		Predictor: PredictAny(),
+	}
+}
+
+// ValidateRange checks that between n and m arguments (inclusive) were given
+func ValidateRange(n, m int) ValidateFunc {
+	return func(args []string) error {
+		if len(args) < n || len(args) > m {
+			return fmt.Errorf("accepts between %v and %v args, received %v", n, m, len(args))
+		}
+		return nil
+	}
+}
+
+
 // Any arguments
 
 // ArgsAny allows any number of arguments with any value

@@ -193,6 +193,7 @@ Predefined options are also available:
 
 - `ArgsAny()`: accepts any number args, predicts files and directories
 - `ArgsExact(n)`: accepts _exactly_ `n` arguments. Predicts files and directories.
+- `ArgsRange(n, m)`: accepts between `n` and `m` arguments (inclusive). Predicts files and directories.
 - `ArgsNone()`: accepts _no_ args and predicts nothing.
 - `ArgsSet(...string)`: Accepts _one_ argument, which MUST be included in the
   given set. Predicts the values from the set.
