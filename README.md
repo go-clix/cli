@@ -115,6 +115,31 @@ func applyCmd() *cli.Command {
 }
 ```
 
+Another `pflag.FlagSet` can be accessed using `*Command.PersistentFlags()`. Contrary to the
+basic flags, flags set via the persistent flag set will be passed down to the children of the
+command. 
+
+```go
+func applyCmd() *cli.Command {
+    cmd := &cli.Command{
+        Use: "apply",
+        Short: "apply the changes"
+    }
+    force := cmd.PersistentFlags().BoolP("force", "f", false, "skip checks")
+    childCmd := &cli.Command{
+        Use: "now"
+        Short: "do it now"
+    }
+    cmd.AddCommand(childCmd)
+    childCmd.Run = func(cmd *cli.Command, args []string) error {
+        fmt.Println("applied now", args[0])
+        if *force {
+            fmt.Println("The force was with us.")
+        }
+    }
+}
+```
+
 ## Aliases
 
 To make the `apply` subcommand also available as `make` and `do`:

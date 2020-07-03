@@ -14,6 +14,15 @@ func (c *Command) Flags() *pflag.FlagSet {
 	return c.flags
 }
 
+// PersistentFlags returns the `*pflag.FlagSet` with the persistent flags of this command.
+// Persistent flags are passed to subcommands.
+func (c *Command) PersistentFlags() *pflag.FlagSet {
+	if c.persistentFlags == nil {
+		c.persistentFlags = pflag.NewFlagSet(c.Name(), pflag.ContinueOnError)
+	}
+	return c.persistentFlags
+}
+
 // stripFlags removes flags from the argument line, leaving only subcommands and
 // positional arguments.
 func stripFlags(args []string, c *Command) []string {

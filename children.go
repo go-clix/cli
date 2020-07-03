@@ -1,12 +1,21 @@
 package cli
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/spf13/pflag"
+)
 
 // AddCommand adds the supplied commands as subcommands.
+// Persistent flags are passed down to the child.
 // This command is set as the parent of the new children.
 func (c *Command) AddCommand(children ...*Command) {
 	for _, child := range children {
 		child.parentPtr = c
+		if c.persistentFlags != nil {
+			child.persistentFlags = pflag.NewFlagSet(child.Name(), pflag.ContinueOnError)
+			child.PersistentFlags().AddFlagSet(c.persistentFlags)
+		}
 		c.children = append(c.children, child)
 	}
 }
