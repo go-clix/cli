@@ -121,6 +121,11 @@ func (c *Command) execute(args []string) error {
 }
 
 func initHelpFlag(c *Command) *bool {
+	if f := c.Flags().ShorthandLookup("h"); f != nil {
+		// -h already taken, so don't try to bind it
+		return c.Flags().Bool("help", false, "help for "+c.Name())
+	}
+
 	return c.Flags().BoolP("help", "h", false, "help for "+c.Name())
 }
 
