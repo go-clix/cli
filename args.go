@@ -84,6 +84,26 @@ func ValidateExact(n int) ValidateFunc {
 	}
 }
 
+// Minimum arguments
+
+// ArgsMin checks for at least n arguments, predicting anything
+func ArgsMin(n int) Arguments {
+	return Args{
+		Validator: ValidateMin(n),
+		Predictor: PredictAny(),
+	}
+}
+
+// ValidateMin checks that at least n arguments were given
+func ValidateMin(n int) ValidateFunc {
+	return func(args []string) error {
+		if len(args) < n {
+			return fmt.Errorf("expects at least %v arg, received %v", n, len(args))
+		}
+		return nil
+	}
+}
+
 // Argument range
 
 // ArgsRange checks for between n and m arguments (inclusive), predicting anything
@@ -103,7 +123,6 @@ func ValidateRange(n, m int) ValidateFunc {
 		return nil
 	}
 }
-
 
 // Any arguments
 
