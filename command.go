@@ -101,11 +101,9 @@ func (c *Command) execute(args []string) error {
 	}
 
 	// show help if requested or missing `Run()`
-	switch {
-	case showHelp != nil && *showHelp:
-		fallthrough
-	case c.Run == nil:
-		return helpErr(c)
+	if (showHelp != nil && *showHelp) || (c.Run == nil) {
+		log.Println(c.Usage())
+		return nil
 	}
 
 	// validate args
