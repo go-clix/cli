@@ -102,7 +102,7 @@ func (c *Command) execute(args []string) error {
 
 	// show help if requested or missing `Run()`
 	if (showHelp != nil && *showHelp) || (c.Run == nil) {
-		log.Printf("%s", c.Usage())
+		log.Println(c.Usage())
 		return nil
 	}
 
