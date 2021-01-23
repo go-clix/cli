@@ -43,9 +43,10 @@ type Command struct {
 	Args Arguments
 
 	// internal fields
-	children  []*Command
-	flags     *pflag.FlagSet
-	parentPtr *Command
+	children        []*Command
+	flags           *pflag.FlagSet
+	persistentFlags *pflag.FlagSet
+	parentPtr       *Command
 }
 
 // Execute runs the application. It should be run on the most outer level
@@ -90,6 +91,7 @@ func (c *Command) execute(args []string) error {
 	}
 
 	// parse flags
+	c.Flags().AddFlagSet(c.PersistentFlags())
 	if err := c.Flags().Parse(args); err != nil {
 		return c.help(err)
 	}

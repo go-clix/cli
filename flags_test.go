@@ -77,3 +77,17 @@ func TestStripFlags(t *testing.T) {
 		}
 	}
 }
+
+func TestPersistentFlags(t *testing.T) {
+	parent := &Command{}
+	parent.PersistentFlags().String("persistent", "", "")
+	parent.Flags().String("non-persistent", "", "")
+	child := &Command{}
+	parent.AddCommand(child)
+	if child.PersistentFlags().Lookup("persistent") == nil {
+		t.Error("expected persistent flag to be passed to child")
+	}
+	if child.Flags().Lookup("non-persistent") != nil {
+		t.Error("expected non-persistent flag to not be passed to child")
+	}
+}
