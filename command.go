@@ -127,18 +127,6 @@ func initHelpFlag(c *Command) *bool {
 	return c.Flags().BoolP("help", "h", false, "help for "+c.Name())
 }
 
-func helpErr(c *Command) error {
-	help := c.Short
-	if c.Long != "" {
-		help = c.Long
-	}
-
-	return ErrHelp{
-		Message: help,
-		usage:   c.Usage(),
-	}
-}
-
 // Name of this command. The first segment of the `Use` field.
 func (c *Command) Name() string {
 	return strings.Split(c.Use, " ")[0]
