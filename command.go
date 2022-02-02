@@ -42,8 +42,10 @@ type Command struct {
 	// Args is used to validate and complete positional arguments
 	Args Arguments
 
+	// Child commands
+	Commands []*Command
+
 	// internal fields
-	children  []*Command
 	flags     *pflag.FlagSet
 	parentPtr *Command
 }
@@ -58,7 +60,7 @@ func (c *Command) Execute() error {
 	}
 
 	// add subcommand for install CLI completions
-	if len(c.children) != 0 {
+	if len(c.Commands) != 0 {
 		c.AddCommand(completionCmd(c.Use))
 	}
 
@@ -125,18 +127,6 @@ func initHelpFlag(c *Command) *bool {
 	}
 
 	return c.Flags().BoolP("help", "h", false, "help for "+c.Name())
-}
-
-func helpErr(c *Command) error {
-	help := c.Short
-	if c.Long != "" {
-		help = c.Long
-	}
-
-	return ErrHelp{
-		Message: help,
-		usage:   c.Usage(),
-	}
 }
 
 // Name of this command. The first segment of the `Use` field.

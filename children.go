@@ -7,7 +7,7 @@ import "fmt"
 func (c *Command) AddCommand(children ...*Command) {
 	for _, child := range children {
 		child.parentPtr = c
-		c.children = append(c.children, child)
+		c.Commands = append(c.Commands, child)
 	}
 }
 
@@ -21,7 +21,7 @@ func findTarget(c *Command, args []string) (*Command, []string, error) {
 
 	cmd, ok := c.child(nextSubCmd)
 	switch {
-	case !ok && c.children != nil:
+	case !ok && c.Commands != nil:
 		return nil, nil, c.help(fmt.Errorf("unknown subcommand `%s`", nextSubCmd))
 	case cmd != nil:
 		return findTarget(cmd, argsMinusFirstX(args, nextSubCmd))
@@ -30,7 +30,7 @@ func findTarget(c *Command, args []string) (*Command, []string, error) {
 }
 
 func (c *Command) child(name string) (*Command, bool) {
-	for _, child := range c.children {
+	for _, child := range c.Commands {
 		if child.Name() == name {
 			return child, true
 		}

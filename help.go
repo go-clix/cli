@@ -95,7 +95,7 @@ Use "{{.CommandPath}} [command] --help" for more information about a command.
 // texts line up
 func (h *helpable) CommandPadding() int {
 	pad := 9
-	for _, c := range h.parentPtr.children {
+	for _, c := range h.parentPtr.Commands {
 		l := len(c.Name())
 		if l > pad {
 			pad = l
@@ -117,13 +117,13 @@ func (h *helpable) Use() string {
 
 // HasChildren reports whether this command has children
 func (h *helpable) HasChildren() bool {
-	return h.children != nil
+	return h.Commands != nil
 }
 
 // Children returns the children of this command.
 func (h *helpable) Children() []*helpable {
-	m := make([]*helpable, len(h.children))
-	for i, c := range h.children {
+	m := make([]*helpable, len(h.Commands))
+	for i, c := range h.Commands {
 		m[i] = c.helpable()
 	}
 	return m

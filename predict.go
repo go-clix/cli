@@ -42,15 +42,15 @@ func createCmp(c *Command) complete.Command {
 		rootCmp.Flags["--"+flag.Name] = p
 	})
 
-	if c.children != nil {
+	if c.Commands != nil {
 		rootCmp.Sub = make(complete.Commands)
-		for _, child := range c.children {
+		for _, child := range c.Commands {
 			rootCmp.Sub[child.Name()] = createCmp(child)
 		}
 	}
 
 	// Positional Arguments, default to ArgsAny for all leaf commands
-	if c.Args == nil && len(c.children) == 0 {
+	if c.Args == nil && len(c.Commands) == 0 {
 		c.Args = ArgsAny()
 	}
 	rootCmp.Args = c.Args
